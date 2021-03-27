@@ -4,3 +4,5 @@ client/node_modules/
 client/.erb/
 
 client/src/node_modules/
+
+client/.eslintcache
