@@ -1,51 +1,40 @@
+import {
+  createMuiTheme,
+  CssBaseline,
+  LinearProgress,
+  ThemeProvider,
+} from '@material-ui/core';
+import { deepOrange, teal } from '@material-ui/core/colors';
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import icon from '../assets/icon.svg';
-import './App.global.css';
+import CreateIdentity from './components/pages/CreateIdentity';
+import SelectIdentity from './components/pages/SelectIdentity';
+import Dashboard from './components/pages/Dashboard';
 
-const Hello = () => {
-  return (
-    <div>
-      <div className="Hello">
-        <img width="200px" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className="Hello">
-        <a
-          href="https://electron-react-boilerplate.js.org/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              📚
-            </span>
-            Read our docs
-          </button>
-        </a>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
-      </div>
-    </div>
-  );
-};
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+    primary: teal,
+    secondary: deepOrange,
+  },
+});
 
 export default function App() {
+  const loading: boolean = true;
   return (
-    <Router>
-      <Switch>
-        <Route path="/" component={Hello} />
-      </Switch>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      {loading ? (
+        <LinearProgress />
+      ) : (
+        <Router>
+          <Switch>
+            <Route path="/createIdentity" component={CreateIdentity} />
+            <Route path="/selectIdentity" component={SelectIdentity} />
+            <Route path="/dashboard" component={Dashboard} />
+          </Switch>
+        </Router>
+      )}
+    </ThemeProvider>
   );
 }
