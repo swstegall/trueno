@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import CreateIdentity from './components/pages/CreateIdentity';
 import SelectIdentity from './components/pages/SelectIdentity';
 import Dashboard from './components/pages/Dashboard';
+import { useSelector } from 'react-redux';
 
 const theme = createMuiTheme({
   palette: {
@@ -20,7 +21,11 @@ const theme = createMuiTheme({
 });
 
 export default function App() {
+  const contents = useSelector((state) => state);
   const loading: boolean = true;
+
+  console.log(contents);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
