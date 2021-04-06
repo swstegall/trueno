@@ -24,9 +24,7 @@ const theme = createMuiTheme({
 
 export default function App() {
   const contents = useSelector((state) => state);
-  const loading: boolean = true;
-
-  console.log(window.location.href);
+  const loading: boolean = false;
 
   useEffectOnce(() => {
     checkForIdentity();

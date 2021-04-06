@@ -6,3 +6,5 @@ client/src/node_modules/
 client/.eslintcache
 
 client/release/
+
+client/identity.json
