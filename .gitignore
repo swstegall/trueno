@@ -10,3 +10,5 @@ client/release/
 client/identity.json
 
 .env
+
+api/node_modules/
