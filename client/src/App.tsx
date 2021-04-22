@@ -1,18 +1,15 @@
-import {
-  createMuiTheme,
-  CssBaseline,
-  LinearProgress,
-  ThemeProvider,
-} from '@material-ui/core';
-import { deepOrange, teal } from '@material-ui/core/colors';
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import CreateIdentity from './components/pages/CreateIdentity';
-import SelectIdentity from './components/pages/SelectIdentity';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
+import { deepOrange, teal } from '@material-ui/core/colors';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import CreateUser from './components/pages/CreateUser';
+import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
-import { useSelector } from 'react-redux';
 import { useEffectOnce } from 'react-use';
-import checkForIdentity from './utilities/checkForIdentity';
+import { useSelector } from 'react-redux';
+import { NotificationActions } from './redux/reducers/Notification';
 
 const theme = createMuiTheme({
   palette: {
@@ -22,28 +19,54 @@ const theme = createMuiTheme({
   },
 });
 
-export default function App() {
-  const contents = useSelector((state) => state);
-  const loading: boolean = false;
+const Alert = (props: any) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
+
+export default () => {
+  const [loggedIn, setLoggedIn]: any = React.useState(undefined);
+  const Notification = useSelector((state: any) => state.Notification);
 
   useEffectOnce(() => {
-    checkForIdentity();
+    if (localStorage.getItem('token') === null) {
+      setLoggedIn(false);
+    } else {
+      setLoggedIn(true);
+    }
   });
+
+  setInterval(() => {
+    console.log(Notification);
+  }, 1000);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {loading ? (
-        <LinearProgress />
+      <Snackbar
+        open={Notification.Open}
+        autoHideDuration={6000}
+        onClose={() => {
+          NotificationActions.Reset();
+        }}
+      >
+        <Alert onClose={NotificationActions.Reset()} severity="success">
+          This is a success message!
+        </Alert>
+      </Snackbar>
+      {loggedIn ? (
+        <Router>
+          <Switch>
+            <Route exact path="/" component={Dashboard} />
+          </Switch>
+        </Router>
       ) : (
         <Router>
           <Switch>
-            <Route path="/createIdentity" component={CreateIdentity} />
-            <Route path="/selectIdentity" component={SelectIdentity} />
-            <Route path="/dashboard" component={Dashboard} />
+            <Route exact path="/createUser" component={CreateUser} />
+            <Route exact path="/" component={Login} />
           </Switch>
         </Router>
       )}
     </ThemeProvider>
   );
-}
+};
