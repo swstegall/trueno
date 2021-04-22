@@ -1,0 +1,11 @@
+CREATE TABLE "users" (
+	id uuid NOT NULL CONSTRAINT users_pk PRIMARY KEY,
+	username CHARACTER VARYING(255) NOT NULL,
+	"deletedAt" CHARACTER VARYING(255),
+	"createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	"updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE "users" OWNER TO "dbUser";
+
+CREATE UNIQUE INDEX users_username_uindex ON "users" (username);

@@ -8,3 +8,5 @@ client/.eslintcache
 client/release/
 
 client/identity.json
+
+.env
