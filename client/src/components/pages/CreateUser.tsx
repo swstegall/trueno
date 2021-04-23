@@ -31,13 +31,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default (props: any) => {
   const classes = useStyles();
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
   const submit = async () => {
-    await register(username, password);
+    await register(username, password, props.dispatch);
   };
 
   return (
@@ -102,4 +102,4 @@ export default function SignUp() {
       </div>
     </Container>
   );
-}
+};

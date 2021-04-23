@@ -8,7 +8,7 @@ import CreateUser from './components/pages/CreateUser';
 import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
 import { useEffectOnce } from 'react-use';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationActions } from './redux/reducers/Notification';
 
 const theme = createMuiTheme({
@@ -24,8 +24,9 @@ const Alert = (props: any) => {
 };
 
 export default () => {
+  const dispatch: any = useDispatch();
   const [loggedIn, setLoggedIn]: any = React.useState(undefined);
-  const Notification = useSelector((state: any) => state.Notification);
+  const Notification: any = useSelector((state: any) => state.Notification);
 
   useEffectOnce(() => {
     if (localStorage.getItem('token') === null) {
@@ -35,35 +36,49 @@ export default () => {
     }
   });
 
-  setInterval(() => {
-    console.log(Notification);
-  }, 1000);
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={Notification.Open}
-        autoHideDuration={6000}
+        autoHideDuration={2000}
         onClose={() => {
-          NotificationActions.Reset();
+          dispatch(NotificationActions.SetOpen(false));
         }}
       >
-        <Alert onClose={NotificationActions.Reset()} severity="success">
-          This is a success message!
+        <Alert
+          onClose={() => {
+            dispatch(NotificationActions.SetOpen(false));
+          }}
+          severity={Notification.Severity}
+        >
+          {Notification.Message}
         </Alert>
       </Snackbar>
       {loggedIn ? (
         <Router>
           <Switch>
-            <Route exact path="/" component={Dashboard} />
+            <Route
+              exact
+              path="/"
+              render={() => <Dashboard dispatch={dispatch} />}
+            />
           </Switch>
         </Router>
       ) : (
         <Router>
           <Switch>
-            <Route exact path="/createUser" component={CreateUser} />
-            <Route exact path="/" component={Login} />
+            <Route
+              exact
+              path="/createUser"
+              render={() => <CreateUser dispatch={dispatch} />}
+            />
+            <Route
+              exact
+              path="/"
+              render={() => <Login dispatch={dispatch} />}
+            />
           </Switch>
         </Router>
       )}
