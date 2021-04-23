@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { teal } from '@material-ui/core/colors';
+import { login } from '../../utilities/ajax';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,6 +33,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default (props: any) => {
   const classes = useStyles();
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  const submit = async () => {
+    await login(username, password, props.dispatch);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -53,6 +60,10 @@ export default (props: any) => {
                 label="Username"
                 name="username"
                 autoComplete="username"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -64,15 +75,18 @@ export default (props: any) => {
                 label="Password"
                 name="password"
                 type="password"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
               />
             </Grid>
           </Grid>
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={submit}
           >
             Login
           </Button>
@@ -87,4 +101,4 @@ export default (props: any) => {
       </div>
     </Container>
   );
-}
+};

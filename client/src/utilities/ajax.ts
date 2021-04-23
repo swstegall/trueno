@@ -1,5 +1,6 @@
 import C from './constants';
 import { NotificationActions } from '../redux/reducers/Notification';
+import { UserActions } from '../redux/reducers/User';
 
 export const register = async (
   username: string,
@@ -31,22 +32,33 @@ export const register = async (
   }
 };
 
-export const login = async (username: string, password: string) => {
-  try {
-    const response = await fetch(`${C.localUrl}login`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
+export const login = async (
+  username: string,
+  password: string,
+  dispatch: any
+) => {
+  const response = await fetch(`${C.localUrl}login`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username,
+      password,
+    }),
+  });
+  if (response.status === 200) {
+    console.log('login is successful.');
     const responseJson = await response.json();
-    return responseJson;
-  } catch (error) {
-    console.error(error);
+    dispatch(UserActions.SetUsername(responseJson.username));
+    dispatch(UserActions.SetToken(responseJson.token));
+  } else {
+    dispatch(
+      NotificationActions.OpenNotification(
+        'Invalid username or password.',
+        'error'
+      )
+    );
   }
 };

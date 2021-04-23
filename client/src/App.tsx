@@ -7,7 +7,6 @@ import MuiAlert from '@material-ui/lab/Alert';
 import CreateUser from './components/pages/CreateUser';
 import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
-import { useEffectOnce } from 'react-use';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationActions } from './redux/reducers/Notification';
 
@@ -25,16 +24,10 @@ const Alert = (props: any) => {
 
 export default () => {
   const dispatch: any = useDispatch();
-  const [loggedIn, setLoggedIn]: any = React.useState(undefined);
   const Notification: any = useSelector((state: any) => state.Notification);
-
-  useEffectOnce(() => {
-    if (localStorage.getItem('token') === null) {
-      setLoggedIn(false);
-    } else {
-      setLoggedIn(true);
-    }
-  });
+  const User: any = useSelector((state: any) => state.User);
+  const loggedIn: boolean =
+    User.Username !== undefined && User.Token !== undefined;
 
   return (
     <ThemeProvider theme={theme}>
