@@ -12,3 +12,5 @@ client/identity.json
 .env
 
 api/node_modules/
+
+client/src/utilities/constants.ts
