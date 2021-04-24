@@ -3,6 +3,7 @@ import express, { NextFunction, Response, Request } from "express";
 import bodyParser from "body-parser";
 import { addUser } from "./routes/addUser";
 import { login, verifyToken } from "./routes/login";
+import { newMessage } from "./routes/newMessage";
 
 const serverPort = process.env.REACT_APP_SERVER_PORT || "";
 export const environment: string = process.env.ENVIRONMENT || "";
@@ -55,6 +56,7 @@ app.use((req, res, next) => {
 
 app.post("/login", login);
 app.post("/addUser", addUser);
+app.post("/newMessage", newMessage);
 
 const server = app.listen(serverPort);
 const gracefulShutdown = () => {
