@@ -16,6 +16,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { UserActions } from '../../../redux/reducers/User';
 import MessagesList from './MessagesList';
+import MessageBox from './MessageBox';
 
 const drawerWidth = 240;
 
@@ -166,6 +167,7 @@ export default (props: any) => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <MessagesList />
+        <MessageBox dispatch={props.dispatch} />
       </main>
     </div>
   );

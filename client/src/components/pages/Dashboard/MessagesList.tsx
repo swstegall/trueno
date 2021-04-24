@@ -2,11 +2,11 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     inline: {
       display: 'inline',
+    },
+    paper: {
+      width: '100%',
     },
   })
 );
@@ -29,29 +32,18 @@ export default () => {
       {Messages.map((current: any, i: number) => {
         const currentUser = Users.find((u: any) => u.id === current.userId);
         return (
-          <>
-            <ListItem key={`messsage_${current.id}`} alignItems="flex-start">
-              <ListItemText
-                primary={`${currentUser.username}`}
-                secondary={
-                  <>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      className={classes.inline}
-                      color="textPrimary"
-                    >
-                      {`${current.message}`}
-                    </Typography>
-                    {` - ${moment(current.updatedAt).format('LT L')}`}
-                  </>
-                }
-              />
-            </ListItem>
-            {i !== Messages.length - 1 ? (
-              <Divider variant="inset" component="li" />
-            ) : null}
-          </>
+          <Paper key={`message_${current.id}`} className={classes.paper}>
+            <Grid container wrap="nowrap" spacing={2}>
+              <Grid item>
+                <Avatar>{currentUser.username[0]}</Avatar>
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Typography>{currentUser.username}</Typography>
+                <Typography>{current.message}</Typography>
+              </Grid>
+              <Grid item>{`${moment(current.updatedAt).format('LT L')}`}</Grid>
+            </Grid>
+          </Paper>
         );
       })}
     </List>
