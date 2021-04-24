@@ -1,6 +1,8 @@
 import C from './constants';
+import { MessagesActions } from '../redux/reducers/Messages';
 import { NotificationActions } from '../redux/reducers/Notification';
 import { UserActions } from '../redux/reducers/User';
+import { UsersActions } from '../redux/reducers/Users';
 
 export const register = async (
   username: string,
@@ -56,6 +58,50 @@ export const login = async (
     dispatch(
       NotificationActions.OpenNotification(
         'Invalid username or password.',
+        'error'
+      )
+    );
+  }
+};
+
+export const getUsers = async (token: string, dispatch: any) => {
+  const response = await fetch(`${C.localUrl}getAllUsers`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.status === 200) {
+    const responseJson = await response.json();
+    dispatch(UsersActions.SetUsers(responseJson));
+  } else {
+    dispatch(
+      NotificationActions.OpenNotification(
+        'Session invalid. Login again.',
+        'error'
+      )
+    );
+  }
+};
+
+export const getMessages = async (token: string, dispatch: any) => {
+  const response = await fetch(`${C.localUrl}getAllMessages`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.status === 200) {
+    const responseJson = await response.json();
+    dispatch(MessagesActions.SetMessages(responseJson));
+  } else {
+    dispatch(
+      NotificationActions.OpenNotification(
+        'Session invalid. Login again.',
         'error'
       )
     );

@@ -9,6 +9,8 @@ import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationActions } from './redux/reducers/Notification';
+import { useInterval } from 'react-use';
+import { getUsers, getMessages } from './utilities/ajax';
 
 const theme = createMuiTheme({
   palette: {
@@ -28,6 +30,14 @@ export default () => {
   const User: any = useSelector((state: any) => state.User);
   const loggedIn: boolean =
     User.Username !== undefined && User.Token !== undefined;
+
+  useInterval(
+    () => {
+      getUsers(User.Token, dispatch);
+      getMessages(User.Token, dispatch);
+    },
+    loggedIn ? 5000 : null
+  );
 
   return (
     <ThemeProvider theme={theme}>

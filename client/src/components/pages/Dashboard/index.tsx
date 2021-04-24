@@ -14,7 +14,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { UserActions } from '../../redux/reducers/User';
+import { UserActions } from '../../../redux/reducers/User';
+import { useSelector } from 'react-redux';
 
 const drawerWidth = 240;
 
@@ -99,13 +100,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default (props: any) => {
   const classes = useStyles();
+  const Messages: any = useSelector((state: any) => state.Messages);
+  const Users: any = useSelector((state: any) => state.Users);
   const [open, setOpen] = React.useState(false);
+
+  console.log(Messages);
+  console.log(Users);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
   return (
     <div className={classes.root}>
       <AppBar
