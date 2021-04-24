@@ -15,7 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { UserActions } from '../../../redux/reducers/User';
-import { useSelector } from 'react-redux';
+import MessagesList from './MessagesList';
 
 const drawerWidth = 240;
 
@@ -81,14 +81,11 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     height: '100vh',
-    overflow: 'auto',
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+    width: '100vw',
+    overflowX: 'hidden',
+    overflowY: 'auto',
   },
   paper: {
-    padding: theme.spacing(2),
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
@@ -100,12 +97,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default (props: any) => {
   const classes = useStyles();
-  const Messages: any = useSelector((state: any) => state.Messages);
-  const Users: any = useSelector((state: any) => state.Users);
   const [open, setOpen] = React.useState(false);
-
-  console.log(Messages);
-  console.log(Users);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -173,9 +165,7 @@ export default (props: any) => {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          test
-        </Container>
+        <MessagesList />
       </main>
     </div>
   );
