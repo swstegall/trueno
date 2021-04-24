@@ -65,7 +65,9 @@ export default () => {
             <Route
               exact
               path="/"
-              render={() => <Dashboard dispatch={dispatch} />}
+              render={() => (
+                <Dashboard dispatch={dispatch} />
+              )}
             />
           </Switch>
         </Router>

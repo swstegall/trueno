@@ -107,3 +107,29 @@ export const getMessages = async (token: string, dispatch: any) => {
     );
   }
 };
+
+export const newMessage = async (
+  message: string,
+  token: string,
+  dispatch: any
+) => {
+  const response = await fetch(`${C.localUrl}newMessage`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      message,
+    }),
+  });
+  if (response.status !== 200) {
+    dispatch(
+      NotificationActions.OpenNotification(
+        'Error communicating with server.',
+        'error'
+      )
+    );
+  }
+};
