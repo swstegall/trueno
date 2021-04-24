@@ -49,7 +49,6 @@ export const login = async (
     }),
   });
   if (response.status === 200) {
-    console.log('login is successful.');
     const responseJson = await response.json();
     dispatch(UserActions.SetUsername(responseJson.username));
     dispatch(UserActions.SetToken(responseJson.token));
