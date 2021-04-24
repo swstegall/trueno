@@ -13,10 +13,9 @@ export const newMessage = async (req: Request, res: Response) => {
     updatedAt: date,
   };
   try {
-    database.messages.create(newMessage);
+    await database.messages.create(newMessage);
     res.status(200).send({ success: true });
   } catch (error: any) {
-    database.messages.create(newMessage);
     res.status(400).send({ success: false });
   }
 };

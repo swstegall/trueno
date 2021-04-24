@@ -40,7 +40,7 @@ export const addUser = async (req: Request, res: Response) => {
         .send({ success: false, error: "Username is already in use." });
       return;
     }
-    database.users.create(newUser);
+    await database.users.create(newUser);
     const newCredential: any = {
       id: userId,
       password: generatePassword(req.body.password as string),
@@ -48,7 +48,7 @@ export const addUser = async (req: Request, res: Response) => {
       createdAt: date,
       updatedAt: date,
     };
-    database.credentials.create(newCredential);
+    await database.credentials.create(newCredential);
     res.status(200).send({ success: true });
   } catch (error: any) {
     res.status(500).send({ success: false, error: "Internal server error." });
