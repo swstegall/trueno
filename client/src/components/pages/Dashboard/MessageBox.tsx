@@ -1,7 +1,7 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { useSelector } from 'react-redux';
 import { newMessage } from '../../../utilities/ajax';
 
 const useStyles = makeStyles((theme: Theme) =>
