@@ -7,10 +7,11 @@ import MuiAlert from '@material-ui/lab/Alert';
 import CreateUser from './components/pages/CreateUser';
 import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
-import { useDispatch, useSelector } from 'react-redux';
 import { NotificationActions } from './redux/reducers/Notification';
 import { useInterval } from 'react-use';
-import { getUsers, getMessages } from './utilities/ajax';
+import { getUsers } from './utilities/ajax';
+import { MessageActions } from './redux/reducers/Messages';
+import { useAppDispatch, useAppSelector } from './utilities/hooks';
 
 const theme = createMuiTheme({
   palette: {
@@ -25,16 +26,15 @@ const Alert = (props: any) => {
 };
 
 export default () => {
-  const dispatch: any = useDispatch();
-  const Notification: any = useSelector((state: any) => state.Notification);
-  const User: any = useSelector((state: any) => state.User);
-  const loggedIn: boolean =
-    User.Username !== undefined && User.Token !== undefined;
+  const dispatch = useAppDispatch();
+  const Notification: any = useAppSelector((state: any) => state.Notification);
+  const User: any = useAppSelector((state: any) => state.User);
+  const loggedIn: boolean = User.Username !== '' && User.Token !== '';
 
   useInterval(
     () => {
       getUsers(User.Token, dispatch);
-      getMessages(User.Token, dispatch);
+      dispatch(MessageActions.Cycle(User.Token));
     },
     loggedIn ? 5000 : null
   );
@@ -65,9 +65,7 @@ export default () => {
             <Route
               exact
               path="/"
-              render={() => (
-                <Dashboard dispatch={dispatch} />
-              )}
+              render={() => <Dashboard dispatch={dispatch} />}
             />
           </Switch>
         </Router>
