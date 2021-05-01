@@ -44,18 +44,18 @@ const { cycle, reset } = usersSlice.actions;
 
 export const Cycle = (token: string) => async (dispatch: AppDispatch) => {
   dispatch(AppActions.SetLoading(true));
-  const response = await axios({
-    method: 'post',
-    url: `${C.localUrl}getAllUsers`,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${token}`,
-    },
-  });
-  if (response.status === 200) {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${C.localUrl}getAllUsers`,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+    });
     dispatch(cycle(response.data.users));
-  } else {
+  } catch (error) {
     dispatch(
       NotificationActions.Open({
         Message: 'Session invalid. Login again.',

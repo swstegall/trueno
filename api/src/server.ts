@@ -6,6 +6,7 @@ import { login, verifyToken } from "./routes/login";
 import { newMessage } from "./routes/newMessage";
 import { getAllMessages } from "./routes/getAllMessages";
 import { getAllUsers } from "./routes/getAllUsers";
+import { changePassword } from "./routes/changePassword";
 
 const serverPort = process.env.REACT_APP_SERVER_PORT || "";
 export const environment: string = process.env.ENVIRONMENT || "";
@@ -61,6 +62,7 @@ app.post("/addUser", addUser);
 app.post("/newMessage", newMessage);
 app.post("/getAllMessages", getAllMessages);
 app.post("/getAllUsers", getAllUsers);
+app.post("/changePassword", changePassword);
 
 const server = app.listen(serverPort);
 const gracefulShutdown = () => {
