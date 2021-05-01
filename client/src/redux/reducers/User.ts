@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 import { AppDispatch } from '..';
 import C from '../../utilities/constants';
 import { NotificationActions } from './Notification';
@@ -33,21 +34,24 @@ const { initialize, reset } = userSlice.actions;
 const Login = (username: string, password: string) => async (
   dispatch: AppDispatch
 ) => {
-  const response = await fetch(`${C.localUrl}login`, {
-    method: 'POST',
+  const response = await axios({
+    method: 'post',
+    url: `${C.localUrl}login`,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
+    data: {
       username,
       password,
-    }),
+    },
   });
   if (response.status === 200) {
-    const responseJson = await response.json();
     dispatch(
-      initialize({ Username: responseJson.username, Token: responseJson.token })
+      initialize({
+        Username: response.data.username,
+        Token: response.data.token,
+      })
     );
   } else {
     dispatch(
@@ -62,16 +66,17 @@ const Login = (username: string, password: string) => async (
 const Register = (username: string, password: string) => async (
   dispatch: AppDispatch
 ) => {
-  const response = await fetch(`${C.localUrl}addUser`, {
-    method: 'POST',
+  const response = await axios({
+    method: 'post',
+    url: `${C.localUrl}addUser`,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
+    data: {
       username,
       password,
-    }),
+    },
   });
   if (response.status === 200) {
     dispatch(

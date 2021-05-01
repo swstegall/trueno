@@ -12,9 +12,10 @@ export const newMessage = async (req: Request, res: Response) => {
     createdAt: date,
     updatedAt: date,
   };
+  const payload = await database.messages.create(newMessage);
+  const response = payload.dataValues;
   try {
-    const payload = await database.messages.create(newMessage);
-    res.status(200).send({ success: true, message: payload.dataValues });
+    res.status(200).send({ success: true, message: { ...response } });
   } catch (error: any) {
     res.status(400).send({ success: false });
   }

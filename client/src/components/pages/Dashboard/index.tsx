@@ -101,7 +101,7 @@ export default (props: any) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const Users: any = useAppSelector((state: any) => state.Users);
-  const render = Users.length > 0;
+  const render = Users.Active.length > 0;
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -154,7 +154,7 @@ export default (props: any) => {
         </div>
         <List>
           {render &&
-            Users.map((user: any) => (
+            Users.Active.map((user: any) => (
               <ListItem key={`user_${user.username}`}>
                 <ListItemIcon>
                   <PersonIcon />
@@ -178,7 +178,7 @@ export default (props: any) => {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <MessagesList dispatch={props.dispatch} />
+        <MessagesList />
         <MessageBox dispatch={props.dispatch} />
       </main>
     </div>

@@ -9,7 +9,7 @@ import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
 import { NotificationActions } from './redux/reducers/Notification';
 import { useInterval } from 'react-use';
-import { getUsers } from './utilities/ajax';
+import { UsersActions } from './redux/reducers/Users';
 import { MessageActions } from './redux/reducers/Messages';
 import { useAppDispatch, useAppSelector } from './utilities/hooks';
 
@@ -33,7 +33,7 @@ export default () => {
 
   useInterval(
     () => {
-      getUsers(User.Token, dispatch);
+      dispatch(UsersActions.Cycle(User.Token));
       dispatch(MessageActions.Cycle(User.Token));
     },
     loggedIn ? 5000 : null

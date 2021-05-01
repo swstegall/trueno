@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 import { AppDispatch } from '..';
 import C from '../../utilities/constants';
 import { NotificationActions } from './Notification';
@@ -38,8 +39,9 @@ const messagesSlice = createSlice({
 const { cycle, create, reset } = messagesSlice.actions;
 
 const Cycle = (token: string) => async (dispatch: AppDispatch) => {
-  const response = await fetch(`${C.localUrl}getAllMessages`, {
-    method: 'POST',
+  const response = await axios({
+    method: 'post',
+    url: `${C.localUrl}getAllMessages`,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -47,11 +49,7 @@ const Cycle = (token: string) => async (dispatch: AppDispatch) => {
     },
   });
   if (response.status === 200) {
-    const responseJson: {
-      success: boolean;
-      messages: Array<Message>;
-    } = await response.json();
-    dispatch(cycle(responseJson.messages));
+    dispatch(cycle(response.data.messages));
   } else {
     dispatch(
       NotificationActions.Open({
@@ -65,18 +63,21 @@ const Cycle = (token: string) => async (dispatch: AppDispatch) => {
 export const Create = (message: string, token: string) => async (
   dispatch: any
 ) => {
-  const response = await fetch(`${C.localUrl}newMessage`, {
-    method: 'POST',
+  const response = await axios({
+    method: 'post',
+    url: `${C.localUrl}newMessage`,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({
+    data: {
       message,
-    }),
+    },
   });
-  if (response.status !== 200) {
+  if (response.status === 200) {
+    dispatch(create(response.data.message));
+  } else {
     dispatch(
       NotificationActions.Open({
         Message: 'Error communicating with server.',

@@ -31,7 +31,7 @@ export default () => {
   return (
     <List className={classes.root}>
       {Messages.Active.map((current: any, i: number) => {
-        const currentUser = Users.find((u: any) => u.id === current.userId);
+        const currentUser = Users.Active.find((u: any) => u.id === current.userId);
         return (
           <Paper key={`message_${current.id}`} className={classes.paper}>
             <Grid container wrap="nowrap" spacing={2}>
