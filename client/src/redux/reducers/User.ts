@@ -3,13 +3,17 @@ import axios from 'axios';
 import { AppDispatch } from '..';
 import C from '../../utilities/constants';
 import { NotificationActions } from './Notification';
+import { MessageActions } from './Messages';
+import { UsersActions } from './Users';
 
 interface User {
+  Loaded: boolean;
   Username: string;
   Token: string;
 }
 
 const initialState: User = {
+  Loaded: false,
   Username: '',
   Token: '',
 };
@@ -18,13 +22,18 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    initialize: (state, action: PayloadAction<User>) => {
+    initialize: (
+      state,
+      action: PayloadAction<{ Username: string; Token: string }>
+    ) => {
       state.Username = action.payload.Username;
       state.Token = action.payload.Token;
+      state.Loaded = true;
     },
     reset: (state) => {
       state.Username = '';
       state.Token = '';
+      state.Loaded = false;
     },
   },
 });
@@ -53,6 +62,8 @@ const Login = (username: string, password: string) => async (
         Token: response.data.token,
       })
     );
+    dispatch(MessageActions.Cycle(response.data.token));
+    dispatch(UsersActions.Cycle(response.data.token));
   } else {
     dispatch(
       NotificationActions.Open({

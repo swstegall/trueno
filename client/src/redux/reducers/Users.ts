@@ -15,10 +15,12 @@ interface User {
 }
 
 interface Users {
+  Loaded: boolean;
   Active: Array<User>;
 }
 
 const initialState: Users = {
+  Loaded: false,
   Active: [],
 };
 
@@ -28,9 +30,11 @@ const usersSlice = createSlice({
   reducers: {
     cycle: (state, action: PayloadAction<Array<User>>) => {
       state.Active = [...action.payload];
+      state.Loaded = true;
     },
     reset: (state) => {
       state.Active = [];
+      state.Loaded = false;
     },
   },
 });

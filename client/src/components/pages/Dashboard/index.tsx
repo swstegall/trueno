@@ -100,8 +100,9 @@ const useStyles = makeStyles((theme) => ({
 export default (props: any) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const Messages = useAppSelector((state: any) => state.Messages);
   const Users: any = useAppSelector((state: any) => state.Users);
-  const render = Users.Active.length > 0;
+  const render = Messages.Loaded && Users.Loaded;
 
   const handleDrawerOpen = () => {
     setOpen(true);
