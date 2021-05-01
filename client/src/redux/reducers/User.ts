@@ -40,6 +40,19 @@ const userSlice = createSlice({
 
 const { initialize, reset } = userSlice.actions;
 
+const Initialize = (username: string, token: string) => async (
+  dispatch: AppDispatch
+) => {
+  dispatch(
+    initialize({
+      Username: username,
+      Token: token,
+    })
+  );
+  dispatch(MessageActions.Cycle(token));
+  dispatch(UsersActions.Cycle(token));
+};
+
 const Login = (username: string, password: string) => async (
   dispatch: AppDispatch
 ) => {
@@ -62,6 +75,8 @@ const Login = (username: string, password: string) => async (
         Token: response.data.token,
       })
     );
+    localStorage.setItem('Username', response.data.username);
+    localStorage.setItem('Token', response.data.token);
     dispatch(MessageActions.Cycle(response.data.token));
     dispatch(UsersActions.Cycle(response.data.token));
   } else {
@@ -109,6 +124,7 @@ const Register = (username: string, password: string) => async (
 const Reset = () => async (dispatch: AppDispatch) => dispatch(reset());
 
 export const UserActions = {
+  Initialize,
   Login,
   Register,
   Reset,

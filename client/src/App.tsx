@@ -8,10 +8,11 @@ import CreateUser from './components/pages/CreateUser';
 import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
 import { NotificationActions } from './redux/reducers/Notification';
-import { useInterval } from 'react-use';
+import { useEffectOnce, useInterval } from 'react-use';
 import { UsersActions } from './redux/reducers/Users';
 import { MessageActions } from './redux/reducers/Messages';
 import { useAppDispatch, useAppSelector } from './utilities/hooks';
+import { UserActions } from './redux/reducers/User';
 
 const theme = createMuiTheme({
   palette: {
@@ -30,6 +31,14 @@ export default () => {
   const Notification: any = useAppSelector((state: any) => state.Notification);
   const User: any = useAppSelector((state: any) => state.User);
   const loggedIn: boolean = User.Username !== '' && User.Token !== '';
+
+  useEffectOnce(() => {
+    const username = localStorage.getItem('Username');
+    const token = localStorage.getItem('Token');
+    if (username !== null && token !== null) {
+      dispatch(UserActions.Initialize(username, token));
+    }
+  });
 
   useInterval(
     () => {
