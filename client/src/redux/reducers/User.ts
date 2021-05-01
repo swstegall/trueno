@@ -58,19 +58,19 @@ const Login = (username: string, password: string) => async (
   dispatch: AppDispatch
 ) => {
   dispatch(AppActions.SetLoading(true));
-  const response = await axios({
-    method: 'post',
-    url: `${C.localUrl}login`,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    data: {
-      username,
-      password,
-    },
-  });
-  if (response.status === 200) {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${C.localUrl}login`,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      data: {
+        username,
+        password,
+      },
+    });
     dispatch(
       initialize({
         Username: response.data.username,
@@ -81,7 +81,7 @@ const Login = (username: string, password: string) => async (
     localStorage.setItem('Token', response.data.token);
     dispatch(MessageActions.Cycle(response.data.token));
     dispatch(UsersActions.Cycle(response.data.token));
-  } else {
+  } catch (error) {
     dispatch(
       NotificationActions.Open({
         Message: 'Invalid username or password.',
@@ -96,26 +96,26 @@ const Register = (username: string, password: string) => async (
   dispatch: AppDispatch
 ) => {
   dispatch(AppActions.SetLoading(true));
-  const response = await axios({
-    method: 'post',
-    url: `${C.localUrl}addUser`,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    data: {
-      username,
-      password,
-    },
-  });
-  if (response.status === 200) {
+  try {
+    await axios({
+      method: 'post',
+      url: `${C.localUrl}addUser`,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      data: {
+        username,
+        password,
+      },
+    });
     dispatch(
       NotificationActions.Open({
         Message: 'User has been created successfully.',
         Severity: 'success',
       })
     );
-  } else {
+  } catch (error) {
     dispatch(
       NotificationActions.Open({
         Message: 'Error creating user.',
@@ -126,6 +126,40 @@ const Register = (username: string, password: string) => async (
   dispatch(AppActions.SetLoading(false));
 };
 
+const ChangePassword = (password: string, token: string) => async (
+  dispatch: AppDispatch
+) => {
+  try {
+    await axios({
+      method: 'post',
+      url: `${C.localUrl}changePassword`,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      data: {
+        password,
+      },
+    });
+    localStorage.clear();
+    dispatch(reset());
+    dispatch(
+      NotificationActions.Open({
+        Message: 'Password has been changed successfully.',
+        Severity: 'success',
+      })
+    );
+  } catch (error) {
+    dispatch(
+      NotificationActions.Open({
+        Message: 'Error changing password.',
+        Severity: 'error',
+      })
+    );
+  }
+};
+
 const Reset = () => async (dispatch: AppDispatch) => dispatch(reset());
 
 export const UserActions = {
@@ -133,6 +167,7 @@ export const UserActions = {
   Login,
   Register,
   Reset,
+  ChangePassword,
 };
 
 export default userSlice.reducer;

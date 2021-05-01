@@ -11,6 +11,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import LockIcon from '@material-ui/icons/Lock';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonIcon from '@material-ui/icons/Person';
@@ -18,6 +19,7 @@ import { UserActions } from '../../../redux/reducers/User';
 import MessagesList from './MessagesList';
 import MessageBox from './MessageBox';
 import { useAppSelector } from '../../../utilities/hooks';
+import ChangePasswordDialog from './ChangePasswordDialog';
 
 const drawerWidth = 240;
 
@@ -103,6 +105,15 @@ export default (props: any) => {
   const Messages = useAppSelector((state: any) => state.Messages);
   const Users: any = useAppSelector((state: any) => state.Users);
   const render = Messages.Loaded && Users.Loaded;
+  const [passwordDialogOpen, setPasswordDialogOpen] = React.useState(false);
+
+  const handlePasswordDialogOpen = () => {
+    setPasswordDialogOpen(true);
+  };
+
+  const handlePasswordDialogClose = () => {
+    setPasswordDialogOpen(false);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -113,6 +124,11 @@ export default (props: any) => {
 
   return (
     <div className={classes.root}>
+      <ChangePasswordDialog
+        dispatch={props.dispatch}
+        passwordDialogOpen={passwordDialogOpen}
+        handlePasswordDialogClose={handlePasswordDialogClose}
+      />
       <AppBar
         position="absolute"
         className={clsx(classes.appBar, open && classes.appBarShift)}
@@ -163,6 +179,16 @@ export default (props: any) => {
                 <ListItemText primary={`${user.username}`} />
               </ListItem>
             ))}
+          <ListItem
+            button
+            key={'Change Password'}
+            onClick={handlePasswordDialogOpen}
+          >
+            <ListItemIcon>
+              <LockIcon />
+            </ListItemIcon>
+            <ListItemText primary={'Change Password'} />
+          </ListItem>
           <ListItem
             button
             key={'Logout'}
