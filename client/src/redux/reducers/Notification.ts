@@ -1,44 +1,40 @@
-const C = {
-  SetOpen: 'Notification/SetOpen',
-  OpenNotification: 'Notification/Open',
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface Notification {
+  Open: boolean;
+  Message: string;
+  Severity: string;
+}
+
+const initialState: Notification = {
+  Open: false,
+  Message: '',
+  Severity: '',
 };
 
-const SetOpen = (isOpen: boolean) => async (dispatch: any) => {
-  dispatch({
-    type: C.SetOpen,
-    payload: isOpen,
-  });
-};
+const notificationSlice = createSlice({
+  name: 'notification',
+  initialState,
+  reducers: {
+    open: (
+      state,
+      action: PayloadAction<{ Message: string; Severity: string }>
+    ) => {
+      state.Open = true;
+      state.Message = action.payload.Message;
+      state.Severity = action.payload.Severity;
+    },
+    setOpen: (state, action: PayloadAction<boolean>) => {
+      state.Open = action.payload;
+    },
+  },
+});
 
-const OpenNotification = (message: string, severity: string) => async (
-  dispatch: any
-) => {
-  dispatch({
-    type: C.OpenNotification,
-    payload: { Message: message, Severity: severity },
-  });
-};
+const { open, setOpen } = notificationSlice.actions;
 
 export const NotificationActions = {
-  SetOpen,
-  OpenNotification,
+  Open: open,
+  SetOpen: setOpen,
 };
 
-export default (state: any = {}, action: any) => {
-  switch (action.type) {
-    case C.SetOpen: {
-      return { ...state, Open: action.payload };
-    }
-    case C.OpenNotification: {
-      return {
-        ...state,
-        Open: true,
-        Message: action.payload.Message,
-        Severity: action.payload.Severity,
-      };
-    }
-    default: {
-      return state;
-    }
-  }
-};
+export default notificationSlice.reducer;

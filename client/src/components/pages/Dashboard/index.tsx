@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -18,6 +17,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import { UserActions } from '../../../redux/reducers/User';
 import MessagesList from './MessagesList';
 import MessageBox from './MessageBox';
+import { useAppSelector } from '../../../utilities/hooks';
 
 const drawerWidth = 240;
 
@@ -100,8 +100,8 @@ const useStyles = makeStyles((theme) => ({
 export default (props: any) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const Users: any = useSelector((state: any) => state.Users);
-  const render = Users.length > 0;
+  const Users: any = useAppSelector((state: any) => state.Users);
+  const render = Users.Active.length > 0;
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -154,8 +154,8 @@ export default (props: any) => {
         </div>
         <List>
           {render &&
-            Users.map((user: any) => (
-              <ListItem>
+            Users.Active.map((user: any) => (
+              <ListItem key={`user_${user.username}`}>
                 <ListItemIcon>
                   <PersonIcon />
                 </ListItemIcon>

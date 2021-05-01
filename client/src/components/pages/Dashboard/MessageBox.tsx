@@ -1,8 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { newMessage } from '../../../utilities/ajax';
+import { useAppSelector } from '../../../utilities/hooks';
+import { MessageActions } from '../../../redux/reducers/Messages';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,13 +17,13 @@ const useStyles = makeStyles((theme: Theme) =>
 export default (props: any) => {
   const [message, setMessage] = React.useState('');
   const [render, setRender] = React.useState(true);
-  const User: any = useSelector((state: any) => state.User);
+  const User: any = useAppSelector((state: any) => state.User);
   const classes = useStyles();
 
   const handleSubmit = (event: any) => {
     if (event.key === 'Enter') {
       setRender(false);
-      newMessage(message, User.Token, props.dispatch);
+      props.dispatch(MessageActions.Create(message, User.Token));
       setMessage('');
       setRender(true);
     }

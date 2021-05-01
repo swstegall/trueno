@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { teal } from '@material-ui/core/colors';
-import { login } from '../../utilities/ajax';
+import { UserActions } from '../../redux/reducers/User';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -37,7 +37,7 @@ export default (props: any) => {
   const [password, setPassword] = React.useState('');
 
   const submit = async () => {
-    await login(username, password, props.dispatch);
+    await props.dispatch(UserActions.Login(username, password));
   };
 
   return (
