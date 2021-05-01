@@ -5,6 +5,7 @@ import C from '../../utilities/constants';
 import { NotificationActions } from './Notification';
 import { MessageActions } from './Messages';
 import { UsersActions } from './Users';
+import { AppActions } from './App';
 
 interface User {
   Loaded: boolean;
@@ -56,6 +57,7 @@ const Initialize = (username: string, token: string) => async (
 const Login = (username: string, password: string) => async (
   dispatch: AppDispatch
 ) => {
+  dispatch(AppActions.SetLoading(true));
   const response = await axios({
     method: 'post',
     url: `${C.localUrl}login`,
@@ -87,11 +89,13 @@ const Login = (username: string, password: string) => async (
       })
     );
   }
+  dispatch(AppActions.SetLoading(false));
 };
 
 const Register = (username: string, password: string) => async (
   dispatch: AppDispatch
 ) => {
+  dispatch(AppActions.SetLoading(true));
   const response = await axios({
     method: 'post',
     url: `${C.localUrl}addUser`,
@@ -119,6 +123,7 @@ const Register = (username: string, password: string) => async (
       })
     );
   }
+  dispatch(AppActions.SetLoading(false));
 };
 
 const Reset = () => async (dispatch: AppDispatch) => dispatch(reset());
