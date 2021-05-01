@@ -10,13 +10,16 @@ interface Message {
   message: string;
   deletedAt: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 interface Messages {
+  Loaded: boolean;
   Active: Array<Message>;
 }
 
 const initialState: Messages = {
+  Loaded: false,
   Active: [],
 };
 
@@ -25,13 +28,15 @@ const messagesSlice = createSlice({
   initialState,
   reducers: {
     cycle: (state, action: PayloadAction<Array<Message>>) => {
-      state.Active = [...action.payload];
+      state.Active = action.payload;
+      state.Loaded = true;
     },
     create: (state, action: PayloadAction<Message>) => {
       state.Active.push(action.payload);
     },
     reset: (state) => {
       state.Active = [];
+      state.Loaded = false;
     },
   },
 });

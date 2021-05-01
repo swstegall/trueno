@@ -27,26 +27,35 @@ export default () => {
   const classes = useStyles();
   const Messages: any = useAppSelector((state: any) => state.Messages);
   const Users: any = useAppSelector((state: any) => state.Users);
-  
+  const render = Messages.Loaded && Users.Loaded;
+
   return (
-    <List className={classes.root}>
-      {Messages.Active.map((current: any, i: number) => {
-        const currentUser = Users.Active.find((u: any) => u.id === current.userId);
-        return (
-          <Paper key={`message_${current.id}`} className={classes.paper}>
-            <Grid container wrap="nowrap" spacing={2}>
-              <Grid item>
-                <Avatar>{currentUser.username[0]}</Avatar>
-              </Grid>
-              <Grid item xs zeroMinWidth>
-                <Typography>{currentUser.username}</Typography>
-                <Typography>{current.message}</Typography>
-              </Grid>
-              <Grid item>{`${moment(current.updatedAt).format('LT L')}`}</Grid>
-            </Grid>
-          </Paper>
-        );
-      })}
-    </List>
+    <>
+      {render && (
+        <List className={classes.root}>
+          {Messages.Active.map((current: any, i: number) => {
+            const currentUser = Users.Active.find(
+              (u: any) => u.id === current.userId
+            );
+            return (
+              <Paper key={`message_${current.id}`} className={classes.paper}>
+                <Grid container wrap="nowrap" spacing={2}>
+                  <Grid item>
+                    <Avatar>{currentUser.username[0]}</Avatar>
+                  </Grid>
+                  <Grid item xs zeroMinWidth>
+                    <Typography>{currentUser.username}</Typography>
+                    <Typography>{current.message}</Typography>
+                  </Grid>
+                  <Grid item>{`${moment(current.updatedAt).format(
+                    'LT L'
+                  )}`}</Grid>
+                </Grid>
+              </Paper>
+            );
+          })}
+        </List>
+      )}
+    </>
   );
 };
