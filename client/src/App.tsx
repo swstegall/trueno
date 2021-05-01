@@ -4,6 +4,7 @@ import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import { deepOrange, teal } from '@material-ui/core/colors';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import CreateUser from './components/pages/CreateUser';
 import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
@@ -28,6 +29,7 @@ const Alert = (props: any) => {
 
 export default () => {
   const dispatch = useAppDispatch();
+  const Loading: any = useAppSelector((state: any) => state.App.Loading);
   const Notification: any = useAppSelector((state: any) => state.Notification);
   const User: any = useAppSelector((state: any) => state.User);
   const loggedIn: boolean = User.Username !== '' && User.Token !== '';
@@ -51,6 +53,7 @@ export default () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      {!loggedIn && Loading && <LinearProgress />}
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={Notification.Open}

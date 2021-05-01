@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { AppDispatch } from '..';
 import C from '../../utilities/constants';
+import { AppActions } from './App';
 import { NotificationActions } from './Notification';
 
 interface Message {
@@ -44,6 +45,7 @@ const messagesSlice = createSlice({
 const { cycle, create, reset } = messagesSlice.actions;
 
 const Cycle = (token: string) => async (dispatch: AppDispatch) => {
+  dispatch(AppActions.SetLoading(true));
   const response = await axios({
     method: 'post',
     url: `${C.localUrl}getAllMessages`,
@@ -63,11 +65,13 @@ const Cycle = (token: string) => async (dispatch: AppDispatch) => {
       })
     );
   }
+  dispatch(AppActions.SetLoading(false));
 };
 
 export const Create = (message: string, token: string) => async (
   dispatch: any
 ) => {
+  dispatch(AppActions.SetLoading(true));
   const response = await axios({
     method: 'post',
     url: `${C.localUrl}newMessage`,
@@ -90,6 +94,7 @@ export const Create = (message: string, token: string) => async (
       })
     );
   }
+  dispatch(AppActions.SetLoading(false));
 };
 
 const Reset = () => async (dispatch: AppDispatch) => {

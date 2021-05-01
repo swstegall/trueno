@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { AppDispatch } from '..';
 import C from '../../utilities/constants';
+import { AppActions } from './App';
 import { NotificationActions } from './Notification';
 
 interface User {
@@ -42,6 +43,7 @@ const usersSlice = createSlice({
 const { cycle, reset } = usersSlice.actions;
 
 export const Cycle = (token: string) => async (dispatch: AppDispatch) => {
+  dispatch(AppActions.SetLoading(true));
   const response = await axios({
     method: 'post',
     url: `${C.localUrl}getAllUsers`,
@@ -61,6 +63,7 @@ export const Cycle = (token: string) => async (dispatch: AppDispatch) => {
       })
     );
   }
+  dispatch(AppActions.SetLoading(false));
 };
 
 const Reset = () => async (dispatch: AppDispatch) => {
