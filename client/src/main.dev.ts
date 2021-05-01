@@ -77,6 +77,7 @@ const createWindow = async () => {
       webSecurity: false,
     },
   });
+  mainWindow.setMenu(null);
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
@@ -97,9 +98,6 @@ const createWindow = async () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
 
   // Open urls in the user's browser
   mainWindow.webContents.on('new-window', (event, url) => {
