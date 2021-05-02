@@ -7,6 +7,8 @@ import { newMessage } from "./routes/newMessage";
 import { getAllMessages } from "./routes/getAllMessages";
 import { getAllUsers } from "./routes/getAllUsers";
 import { changePassword } from "./routes/changePassword";
+import { banUser } from "./routes/banUser";
+import { unbanUser } from "./routes/unbanUser";
 
 const serverPort = process.env.REACT_APP_SERVER_PORT || "";
 export const environment: string = process.env.ENVIRONMENT || "";
@@ -59,6 +61,8 @@ app.use((req, res, next) => {
 
 app.post("/login", login);
 app.post("/addUser", addUser);
+app.post("/banUser", banUser);
+app.post("/unbanUser", unbanUser);
 app.post("/newMessage", newMessage);
 app.post("/getAllMessages", getAllMessages);
 app.post("/getAllUsers", getAllUsers);

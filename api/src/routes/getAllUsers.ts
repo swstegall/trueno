@@ -3,12 +3,20 @@ import database from "../database";
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const users = await database.users.findAll({
+    const currentUser = await database.users.findOne({
       where: {
-        deletedAt: null,
+        id: req.headers.id,
       },
     });
-    res.status(200).send({ success: true, users });
+    if (currentUser !== undefined && currentUser !== null) {
+      if (currentUser.admin) {
+        const users = await database.users.findAll();
+        res.status(200).send({ success: true, users });
+      } else {
+        const users = await database.users.findAll();
+        res.status(200).send({ success: true, users });
+      }
+    }
   } catch (error: any) {
     res.status(400).send({ success: false });
   }

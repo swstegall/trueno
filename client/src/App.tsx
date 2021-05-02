@@ -37,8 +37,10 @@ export default () => {
   useEffectOnce(() => {
     const username = localStorage.getItem('Username');
     const token = localStorage.getItem('Token');
+    const admin = localStorage.getItem('Admin') === 'true' ? true : false;
+    const id = localStorage.getItem('ID') || '';
     if (username !== null && token !== null) {
-      dispatch(UserActions.Initialize(username, token));
+      dispatch(UserActions.Initialize(username, token, admin, id));
     }
   });
 

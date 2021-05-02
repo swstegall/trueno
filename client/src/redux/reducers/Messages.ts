@@ -4,6 +4,7 @@ import { AppDispatch } from '..';
 import C from '../../utilities/constants';
 import { AppActions } from './App';
 import { NotificationActions } from './Notification';
+import { UserActions } from './User';
 
 interface Message {
   id: number;
@@ -58,6 +59,8 @@ const Cycle = (token: string) => async (dispatch: AppDispatch) => {
     });
     dispatch(cycle(response.data.messages));
   } catch (error) {
+    localStorage.clear();
+    dispatch(UserActions.Reset());
     dispatch(
       NotificationActions.Open({
         Message: 'Session invalid. Login again.',

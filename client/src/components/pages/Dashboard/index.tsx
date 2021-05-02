@@ -20,6 +20,9 @@ import MessagesList from './MessagesList';
 import MessageBox from './MessageBox';
 import { useAppSelector } from '../../../utilities/hooks';
 import ChangePasswordDialog from './ChangePasswordDialog';
+import BanUserDialog from './BanUserDialog';
+import { NotificationActions } from '../../../redux/reducers/Notification';
+import UnbanUserDialog from './UnbanUserDialog';
 
 const drawerWidth = 240;
 
@@ -97,15 +100,25 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  bannedUser: {
+    color: 'red',
+  },
+  adminUser: {
+    color: 'aqua',
+  },
 }));
 
 export default (props: any) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const Messages = useAppSelector((state: any) => state.Messages);
+  const Messages: any = useAppSelector((state: any) => state.Messages);
+  const User: any = useAppSelector((state: any) => state.User);
   const Users: any = useAppSelector((state: any) => state.Users);
   const render = Messages.Loaded && Users.Loaded;
   const [passwordDialogOpen, setPasswordDialogOpen] = React.useState(false);
+  const [banUserDialogOpen, setBanUserDialogOpen] = React.useState(false);
+  const [unbanUserDialogOpen, setUnbanUserDialogOpen] = React.useState(false);
+  const [targetUser, setTargetUser] = React.useState(undefined);
 
   const handlePasswordDialogOpen = () => {
     setPasswordDialogOpen(true);
@@ -113,6 +126,35 @@ export default (props: any) => {
 
   const handlePasswordDialogClose = () => {
     setPasswordDialogOpen(false);
+  };
+
+  const handleBanUserDialogOpen = (user: any) => {
+    if (User.Admin) {
+      if (User.ID !== user.id) {
+        if (user.deletedAt === null) {
+          setTargetUser(user);
+          setBanUserDialogOpen(true);
+        } else {
+          setTargetUser(user);
+          setUnbanUserDialogOpen(true);
+        }
+      } else {
+        props.dispatch(
+          NotificationActions.Open({
+            Message: 'You cannot ban yourself.',
+            Severity: 'warning',
+          })
+        );
+      }
+    }
+  };
+
+  const handleBanUserDialogClose = () => {
+    setBanUserDialogOpen(false);
+  };
+
+  const handleUnbanUserDialogClose = () => {
+    setUnbanUserDialogOpen(false);
   };
 
   const handleDrawerOpen = () => {
@@ -128,6 +170,20 @@ export default (props: any) => {
         dispatch={props.dispatch}
         passwordDialogOpen={passwordDialogOpen}
         handlePasswordDialogClose={handlePasswordDialogClose}
+      />
+      <BanUserDialog
+        dispatch={props.dispatch}
+        banUserDialogOpen={banUserDialogOpen}
+        handleBanUserDialogClose={handleBanUserDialogClose}
+        targetUser={targetUser}
+        setTargetUser={setTargetUser}
+      />
+      <UnbanUserDialog
+        dispatch={props.dispatch}
+        unbanUserDialogOpen={unbanUserDialogOpen}
+        handleUnbanUserDialogClose={handleUnbanUserDialogClose}
+        targetUser={targetUser}
+        setTargetUser={setTargetUser}
       />
       <AppBar
         position="absolute"
@@ -171,14 +227,66 @@ export default (props: any) => {
         </div>
         <List>
           {render &&
-            Users.Active.map((user: any) => (
-              <ListItem key={`user_${user.username}`}>
-                <ListItemIcon>
-                  <PersonIcon />
-                </ListItemIcon>
-                <ListItemText primary={`${user.username}`} />
-              </ListItem>
-            ))}
+            Users.Active.map((user: any) => {
+              if (user.admin) {
+                return (
+                  <ListItem
+                    button={User.Admin}
+                    key={`user_${user.username}`}
+                    onClick={() => handleBanUserDialogOpen(user)}
+                  >
+                    <ListItemIcon>
+                      <PersonIcon className={classes.adminUser} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
+                        <Typography
+                          className={classes.adminUser}
+                        >{`${user.username}`}</Typography>
+                      }
+                    />
+                  </ListItem>
+                );
+              } else if (User.Admin && user.deletedAt !== null) {
+                return (
+                  <ListItem
+                    button={User.Admin}
+                    key={`user_${user.username}`}
+                    onClick={() => handleBanUserDialogOpen(user)}
+                  >
+                    <ListItemIcon>
+                      <PersonIcon className={classes.bannedUser} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
+                        <Typography
+                          className={classes.bannedUser}
+                        >{`${user.username}`}</Typography>
+                      }
+                    />
+                  </ListItem>
+                );
+              } else if (
+                (!User.Admin && user.deletedAt === null) ||
+                User.Admin
+              ) {
+                return (
+                  <ListItem
+                    button={User.Admin}
+                    key={`user_${user.username}`}
+                    onClick={() => handleBanUserDialogOpen(user)}
+                  >
+                    <ListItemIcon>
+                      <PersonIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={<Typography>{`${user.username}`}</Typography>}
+                    />
+                  </ListItem>
+                );
+              }
+              return <></>;
+            })}
           <ListItem
             button
             key={'Change Password'}
