@@ -66,10 +66,6 @@ const users = db.sequelize.define(
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
-    banned: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
     deletedAt: {
       type: DataTypes.STRING,
       allowNull: true,

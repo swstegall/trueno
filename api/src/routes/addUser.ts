@@ -11,7 +11,6 @@ export const addUser = async (req: Request, res: Response) => {
       id: userId,
       username: req.body.username,
       admin: false,
-      banned: false,
       deletedAt: null,
       createdAt: date,
       updatedAt: date,

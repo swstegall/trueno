@@ -4,6 +4,8 @@ import { AppDispatch } from '..';
 import C from '../../utilities/constants';
 import { AppActions } from './App';
 import { NotificationActions } from './Notification';
+import { UserActions } from './User';
+import * as _ from 'lodash';
 
 interface User {
   admin: boolean;
@@ -30,7 +32,7 @@ const usersSlice = createSlice({
   initialState,
   reducers: {
     cycle: (state, action: PayloadAction<Array<User>>) => {
-      state.Active = [...action.payload];
+      state.Active = _.orderBy([...action.payload], ['username'], 'asc');
       state.Loaded = true;
     },
     reset: (state) => {
@@ -56,6 +58,8 @@ export const Cycle = (token: string) => async (dispatch: AppDispatch) => {
     });
     dispatch(cycle(response.data.users));
   } catch (error) {
+    localStorage.clear();
+    dispatch(UserActions.Reset());
     dispatch(
       NotificationActions.Open({
         Message: 'Session invalid. Login again.',
@@ -66,12 +70,78 @@ export const Cycle = (token: string) => async (dispatch: AppDispatch) => {
   dispatch(AppActions.SetLoading(false));
 };
 
+export const Ban = (id: string, token: string) => async (
+  dispatch: AppDispatch
+) => {
+  try {
+    await axios({
+      method: 'post',
+      url: `${C.localUrl}banUser`,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      data: {
+        id,
+      },
+    });
+    dispatch(
+      NotificationActions.Open({
+        Message: 'User banned successfully.',
+        Severity: 'success',
+      })
+    );
+  } catch (error) {
+    dispatch(
+      NotificationActions.Open({
+        Message: 'Error banning user.',
+        Severity: 'error',
+      })
+    );
+  }
+};
+
+export const Unban = (id: string, token: string) => async (
+  dispatch: AppDispatch
+) => {
+  try {
+    await axios({
+      method: 'post',
+      url: `${C.localUrl}unbanUser`,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      data: {
+        id,
+      },
+    });
+    dispatch(
+      NotificationActions.Open({
+        Message: 'User unbanned successfully.',
+        Severity: 'success',
+      })
+    );
+  } catch (error) {
+    dispatch(
+      NotificationActions.Open({
+        Message: 'Error unbanning user.',
+        Severity: 'error',
+      })
+    );
+  }
+};
+
 const Reset = () => async (dispatch: AppDispatch) => {
   dispatch(reset());
 };
 
 export const UsersActions = {
   Cycle,
+  Ban,
+  Unban,
   Reset,
 };
 

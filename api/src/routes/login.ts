@@ -48,11 +48,13 @@ export const login = async (req: Request, res: Response) => {
           }
         ),
         username: currentUser.username,
+        admin: currentUser.admin,
+        id: currentUser,
       });
     } else {
       res
         .status(401)
-        .send({ success: false, error: "Incorrect username or password" });
+        .send({ success: false, error: "Incorrect username or password." });
     }
   } catch (error: any) {
     res.status(500).send({ success: false, error: "Internal server error." });
