@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       '& .MuiTextField-root': {
         width: '100%',
+        height: '100%',
       },
     },
   })
