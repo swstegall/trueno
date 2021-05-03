@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     width: '100vw',
     overflowX: 'hidden',
-    overflowY: 'auto',
+    overflowY: 'hidden',
   },
   paper: {
     display: 'flex',
@@ -105,6 +105,16 @@ const useStyles = makeStyles((theme) => ({
   },
   adminUser: {
     color: 'aqua',
+  },
+  messagesList: {
+    height: '74vh',
+    maxHeight: '74vh',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+  },
+  messageBox: {
+    height: '100%',
+    maxHeight: '100%',
   },
 }));
 
@@ -313,8 +323,12 @@ export default (props: any) => {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <MessagesList dispatch={props.dispatch} />
-        <MessageBox dispatch={props.dispatch} />
+        <div className={classes.messagesList}>
+          <MessagesList dispatch={props.dispatch} />
+        </div>
+        <div className={classes.messageBox}>
+          <MessageBox dispatch={props.dispatch} />
+        </div>
       </main>
     </div>
   );
