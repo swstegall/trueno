@@ -5,6 +5,7 @@ import C from '../../utilities/constants';
 import { AppActions } from './App';
 import { NotificationActions } from './Notification';
 import { UserActions } from './User';
+import * as _ from 'lodash';
 
 interface Message {
   id: number;
@@ -32,9 +33,11 @@ const messagesSlice = createSlice({
     cycle: (state, action: PayloadAction<Array<Message>>) => {
       state.Active = action.payload;
       state.Loaded = true;
+      state.Active = _.orderBy(state.Active, ["createdAt"], 'asc');
     },
     create: (state, action: PayloadAction<Message>) => {
       state.Active.push(action.payload);
+      state.Active = _.orderBy(state.Active, ["createdAt"], 'asc');
     },
     reset: (state) => {
       state.Active = [];
