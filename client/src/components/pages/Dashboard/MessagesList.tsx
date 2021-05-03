@@ -59,7 +59,7 @@ export default (props: any) => {
     <>
       {render && (
         <List className={classes.root}>
-          {Messages.Active.map((current: any, i: number) => {
+          {Messages.Active.map((current: any) => {
             const currentUser = Users.Active.find(
               (u: any) => u.id === current.userId
             );
