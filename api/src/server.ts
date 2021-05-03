@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: ".env" });
 import express, { NextFunction, Response, Request } from "express";
 import bodyParser from "body-parser";
 import { addUser } from "./routes/addUser";
