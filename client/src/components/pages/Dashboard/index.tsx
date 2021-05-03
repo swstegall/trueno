@@ -313,7 +313,7 @@ export default (props: any) => {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <MessagesList />
+        <MessagesList dispatch={props.dispatch} />
         <MessageBox dispatch={props.dispatch} />
       </main>
     </div>
