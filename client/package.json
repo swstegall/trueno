@@ -260,12 +260,14 @@
     "electron-log": "^4.2.4",
     "electron-updater": "^4.3.4",
     "file-system": "^2.2.2",
+    "final-form": "^4.20.2",
     "fontsource-roboto": "^4.0.0",
     "history": "^5.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-final-form": "^6.5.3",
     "react-redux": "^7.2.3",
     "react-router-dom": "^5.2.0",
     "react-use": "^17.2.1",
@@ -273,7 +275,8 @@
     "redux-logger": "^3.0.6",
     "regenerator-runtime": "^0.13.5",
     "source-map-support": "^0.5.19",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "yup": "^0.32.9"
   },
   "devEngines": {
     "node": ">=10.x",

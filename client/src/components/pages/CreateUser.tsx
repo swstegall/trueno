@@ -10,6 +10,30 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { teal } from '@material-ui/core/colors';
 import { UserActions } from '../../redux/reducers/User';
+import { Form, Field } from 'react-final-form';
+import * as yup from 'yup';
+import { setIn } from 'final-form';
+
+const validationSchema = yup.object({
+  username: yup.string().required(),
+  password: yup.string().required(),
+});
+
+const validateFormValues = (schema: any) => async (values: any) => {
+  if (typeof schema === 'function') {
+    schema = schema();
+  }
+  try {
+    await schema.validate(values, { abortEarly: false });
+  } catch (err) {
+    const errors = err.inner.reduce((formError: any, innerError: any) => {
+      return setIn(formError, innerError.path, innerError.message);
+    }, {});
+    return errors;
+  }
+};
+
+const validate = validateFormValues(validationSchema);
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,11 +57,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default (props: any) => {
   const classes = useStyles();
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
 
-  const submit = async () => {
-    await props.dispatch(UserActions.Register(username, password));
+  const onSubmit = async (values: any) => {
+    await props.dispatch(
+      UserActions.Register(values.username, values.password)
+    );
   };
 
   return (
@@ -49,56 +73,63 @@ export default (props: any) => {
         <Typography component="h1" variant="h5">
           Create User
         </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
+        <Form
+          onSubmit={onSubmit}
+          initialValues={{ username: '', password: '' }}
+          validate={validate}
+          render={({ handleSubmit, form, submitting, pristine, values }) => (
+            <form className={classes.form} onSubmit={handleSubmit}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Field
+                    name="username"
+                    render={({ input }) => (
+                      <TextField
+                        {...input}
+                        variant="outlined"
+                        fullWidth
+                        label="Username"
+                        required
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    name="password"
+                    render={({ input }) => (
+                      <TextField
+                        {...input}
+                        variant="outlined"
+                        fullWidth
+                        label="Password"
+                        type="password"
+                        required
+                      />
+                    )}
+                  />
+                </Grid>
+              </Grid>
+              <Button
                 fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="password"
-                label="Password"
-                name="password"
-                type="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-            </Grid>
-          </Grid>
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={submit}
-          >
-            Create
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link style={{ color: `${teal[500]}` }} to="/">
-                Login
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                type="submit"
+                disabled={submitting || pristine}
+              >
+                Create User
+              </Button>
+              <Grid container justify="flex-end">
+                <Grid item>
+                  <Link style={{ color: `${teal[500]}` }} to="/">
+                    Login
+                  </Link>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        />
       </div>
     </Container>
   );
