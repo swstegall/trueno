@@ -71,8 +71,8 @@ const Cycle = (token: string) => async (dispatch: AppDispatch) => {
   dispatch(AppActions.SetLoading(false));
 };
 
-export const Create = (message: string, token: string) => async (
-  dispatch: any
+const Create = (message: string, token: string) => async (
+  dispatch: AppDispatch
 ) => {
   dispatch(AppActions.SetLoading(true));
   try {
@@ -100,6 +100,68 @@ export const Create = (message: string, token: string) => async (
   dispatch(AppActions.SetLoading(false));
 };
 
+const Remove = (id: string, token: string) => async (dispatch: AppDispatch) => {
+  try {
+    await axios({
+      method: 'post',
+      url: `${C.localUrl}removeMessage`,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      data: {
+        id,
+      },
+    });
+    dispatch(
+      NotificationActions.Open({
+        Message: 'Message removed successfully.',
+        Severity: 'success',
+      })
+    );
+  } catch (error) {
+    dispatch(
+      NotificationActions.Open({
+        Message: 'Error removing message.',
+        Severity: 'error',
+      })
+    );
+  }
+};
+
+const Restore = (id: string, token: string) => async (
+  dispatch: AppDispatch
+) => {
+  try {
+    await axios({
+      method: 'post',
+      url: `${C.localUrl}restoreMessage`,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      data: {
+        id,
+      },
+    });
+    dispatch(
+      NotificationActions.Open({
+        Message: 'Message restored successfully.',
+        Severity: 'success',
+      })
+    );
+  } catch (error) {
+    dispatch(
+      NotificationActions.Open({
+        Message: 'Error restoring message.',
+        Severity: 'error',
+      })
+    );
+  }
+};
+
 const Reset = () => async (dispatch: AppDispatch) => {
   dispatch(reset());
 };
@@ -107,6 +169,8 @@ const Reset = () => async (dispatch: AppDispatch) => {
 export const MessageActions = {
   Cycle,
   Create,
+  Remove,
+  Restore,
   Reset,
 };
 
